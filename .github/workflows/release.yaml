@@ -21,27 +21,6 @@ jobs:
         with:
           repository: wudaown/BeiDou-Server
           path: BeiDou-Server
-          sparse-checkout: |
-            pom.xml
-            gms-server
-            gms-ui
-            gms-server/pom.xml
-            gms-server/src
-            gms-ui/package.json
-            gms-ui/pnpm-lock.yaml
-            gms-ui/yarn.lock
-            gms-ui/src
-            gms-ui/config
-            gms-ui/index.html
-            gms-ui/vite.config*.ts
-            gms-ui/tsconfig.json
-            gms-ui/.env*
-            gms-ui/babel.config.js
-            gms-ui/postcss.config.js
-            gms-ui/tailwind.config.js
-            gms-ui/.eslintrc.js
-            gms-ui/.prettierrc.js
-            gms-ui/.stylelintrc.js
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
