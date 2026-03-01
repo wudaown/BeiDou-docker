@@ -34,7 +34,8 @@ RUN cd /opt/source && \
 RUN cd /opt/source/gms-ui && \
     npm install && \
     npm run build && \
-    cp -r dist/* /opt/server_unzip/
+    mkdir -p /opt/server_unzip/static && \
+    cp -r dist/* /opt/server_unzip/static/
 
 # 复制配置文件和资源
 RUN cp /opt/source/gms-server/src/main/resources/application.yml /opt/server_unzip/
