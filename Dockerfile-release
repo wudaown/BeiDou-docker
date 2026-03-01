@@ -7,7 +7,7 @@ ENV TZ=UTC
 
 # 安装需要的工具
 RUN apt-get update && \
-    apt-get install -y curl jq maven git wget && \
+    apt-get install -y curl jq maven git wget nodejs npm && \
     apt-get clean
 
 # 安装 Java 21
@@ -22,11 +22,26 @@ ARG GITHUB_OWNER=wudaown
 ARG GITHUB_REPO=BeiDou-Server
 
 # 从源码构建
-RUN git clone --depth 1 https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git /opt/source && \
-    cd /opt/source && \
+RUN git clone --depth 1 https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git /opt/source
+
+# 构建后端
+RUN cd /opt/source && \
     mvn clean package -DskipTests -B && \
     mkdir -p /opt/server_unzip && \
     cp gms-server/target/BeiDou.jar /opt/server_unzip/
+
+# 构建前端 UI
+RUN cd /opt/source/gms-ui && \
+    npm install && \
+    npm run build && \
+    cp -r dist/* /opt/server_unzip/
+
+# 复制配置文件和资源
+RUN cp /opt/source/gms-server/src/main/resources/application.yml /opt/server_unzip/
+RUN cp -r /opt/source/gms-server/wz /opt/server_unzip/
+RUN cp -r /opt/source/gms-server/wz-zh-CN /opt/server_unzip/
+RUN cp -r /opt/source/gms-server/scripts /opt/server_unzip/
+RUN cp -r /opt/source/gms-server/scripts-zh-CN /opt/server_unzip/
 
 # final image
 FROM ubuntu:20.04
