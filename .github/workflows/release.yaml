@@ -136,9 +136,15 @@ jobs:
       - name: Create manifest list and pushs
         working-directory: /tmp/digests
         run: |
+          SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          DATE=$(date +%Y%m%d)
           docker buildx imagetools create \
             -t "${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:latest" \
+            -t "${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:${SHA}" \
+            -t "${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:${DATE}" \
             -t "${{ env.GHCR_REGISTRY }}/${{ env.OWNER_LC }}/${{ env.RELEASE_IMAGE }}:latest" \
+            -t "${{ env.GHCR_REGISTRY }}/${{ env.OWNER_LC }}/${{ env.RELEASE_IMAGE }}:${SHA}" \
+            -t "${{ env.GHCR_REGISTRY }}/${{ env.OWNER_LC }}/${{ env.RELEASE_IMAGE }}:${DATE}" \
             $(printf '${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}@sha256:%s ' *)
 
 
