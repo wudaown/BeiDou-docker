@@ -1,6 +1,10 @@
 # 使用基础镜像
 FROM ubuntu:20.04 AS builder
 
+# 设置非交互式安装
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
 # 安装需要的工具
 RUN apt-get update && \
     apt-get install -y curl jq maven git && \
