@@ -36,6 +36,10 @@ jobs:
           cp -r BeiDou-Server/* ./
           rm -rf BeiDou-Server
 
+      - name: Get date
+        id: date
+        run: echo "date=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -46,6 +50,6 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:latest
             ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:${{ github.sha }}
-            ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:$(date +%Y%m%d)
+            ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:${{ steps.date.outputs.date }}
           cache-from: type=gha,scope=release
           cache-to: type=gha,mode=max,scope=release
