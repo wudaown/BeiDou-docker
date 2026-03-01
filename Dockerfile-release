@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y curl jq && \
     apt-get clean
 
-ARG GITHUB_OWNER=BeiDouMS
+ARG GITHUB_OWNER=wudaown
 ARG GITHUB_REPO=BeiDou-Server
 
 ARG RELEASE_PREFIX_GIT_TAG=Release
