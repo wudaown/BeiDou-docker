@@ -8,29 +8,14 @@ RUN apt-get update && \
 
 ARG GITHUB_OWNER=wudaown
 ARG GITHUB_REPO=BeiDou-Server
+ARG RELEASE_VERSION=master
 
-ARG RELEASE_VERSION
-ARG RELEASE_ARCH
-
-# 尝试从 release 下载
-RUN curl -s https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tags/${RELEASE_VERSION} \
-    | jq -r '.assets[] | select(.name | endswith("'${RELEASE_ARCH}'.tar.gz")) | .browser_download_url' \
-    | head -1 \
-    | xargs -r curl -fsSL -o /tmp/latest_release.tar.gz \
-    || true
-
-# 检查文件是否存在
-RUN if [ -s /tmp/latest_release.tar.gz ]; then \
-        mkdir -p /opt/server_unzip && \
-        tar -xzf /tmp/latest_release.tar.gz -C /opt/server_unzip --strip-components=1; \
-    else \
-        echo "No release found, building from source..." && \
-        git clone --depth 1 https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git /opt/source && \
-        cd /opt/source && \
-        mvn clean package -DskipTests -B && \
-        mkdir -p /opt/server_unzip && \
-        cp gms-server/target/BeiDou.jar /opt/server_unzip/; \
-    fi
+# 从源码构建
+RUN git clone --depth 1 https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git /opt/source && \
+    cd /opt/source && \
+    mvn clean package -DskipTests -B && \
+    mkdir -p /opt/server_unzip && \
+    cp gms-server/target/BeiDou.jar /opt/server_unzip/
 
 # final image
 FROM ubuntu:20.04
