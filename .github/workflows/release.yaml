@@ -47,9 +47,8 @@ jobs:
           file: ./Dockerfile-local
           platforms: linux/amd64
           push: true
+          no-cache: true
           tags: |
             ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:latest
             ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:${{ github.sha }}
             ${{ secrets.DOCKER_USER }}/${{ env.RELEASE_IMAGE }}:${{ steps.date.outputs.date }}
-          cache-from: type=gha,scope=release
-          cache-to: type=gha,mode=max,scope=release
